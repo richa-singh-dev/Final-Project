@@ -8,15 +8,15 @@ Rails.application.routes.draw do
   post "/auth/login", to: "authentication#login"
   put "/user/update", to: "user#update"
   get "/user/show", to: "user#show"
-  delete "/user/delete/all", to: "user#destroy"
+  get "/user/mostpopular",to: "user#most_popular"
 
   get "/article", to:"article#home"
   get "/article/show", to:"article#show"
   post "/article/create", to:"article#create"
   put "/article/edit", to:"article#update"
   delete "/article/delete", to: "article#delete"
-  # delete "/article/delete/all", to: "article#destroy"
   get "/article/mostLiked", to: "article#most_liked"
+  get "/article/mostCommented", to: "article#most_commented"
 
   post "/like", to: "like#home"
 

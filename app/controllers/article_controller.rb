@@ -1,6 +1,6 @@
 class ArticleController < ApplicationController
     
-    before_action :authorize_request, except: [:home, :show ,:destroy, :most_liked]
+    before_action :authorize_request, except: [:home, :show ,:destroy, :most_liked, :most_commented]
     #---------- reference for inserting category in article --------- 
      # @articles = Article.all
 
@@ -98,12 +98,15 @@ class ArticleController < ApplicationController
     end
 
    
-    # def destroy
-    #     for article in Article.all
-    #         article.destroy
-    #     end
-    # end
-
+   def most_liked
+        article = Article.order(:article_likes_count).last
+        render json: article, :include => {:categories => {:only => :name}}
+   end
+   
+   def most_commented
+        article = Article.order(:article_comments_count).last
+        render json: article, :include => {:categories => {:only => :name}}
+    end
 
     private
 

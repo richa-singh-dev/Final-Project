@@ -11,7 +11,11 @@ class LikeController < ApplicationController
             @author = User.find_by(id: author_id)
             @author.likes_count += 1
             @author.save()
-            
+
+            article = Article.find_by(id: params[:article_id])
+            article.article_likes_count += 1
+            article.save()
+
             render json: {"message": "liked"}, status: :ok
           rescue => e
             # ...
@@ -23,10 +27,17 @@ class LikeController < ApplicationController
             @author.likes_count -= 1
             @author.save()
 
+            article = Article.find_by(id: params[:article_id])
+            article.article_likes_count -= 1
+            article.save()
+
             render json: {"message": "unliked"}, status: :ok
           end
        
     end
+
+    
+
 
 
 end

@@ -1,7 +1,7 @@
 class UserController < ApplicationController
     
     # skip_before_action :verify_authenticity_token
-    before_action :authorize_request, except: [:create, :index, :show, :destroy]
+    before_action :authorize_request, except: [:create, :index, :show, :most_popular]
 
     before_action :find_user, except: %i[create index]
     
@@ -37,18 +37,20 @@ class UserController < ApplicationController
             render json: { errors: @user.errors.full_messages },
                 status: :unprocessable_entity
         else
-            render json: @current_user, :except => :password_digest, status: :updated
+            render json: @current_user, :except => :password_digest, status: :ok
         end
         
     end
 
-    #---------- not-in-functionality ---- keeping-to-reset-database-----
-    # DELETE /users/{username}
-    def destroy
-        for user in User.all
-            user.destroy
-        end
-    end
+
+
+   def most_popular
+    user= User.order(:likes_count).last
+    render json: user , :except => :password_digest, status: :ok
+end
+
+
+    
     
     private
     
