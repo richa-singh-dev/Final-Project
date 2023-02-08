@@ -1,6 +1,6 @@
 class ArticleController < ApplicationController
     
-    before_action :authorize_request, except: [:home, :show ,:destroy]
+    before_action :authorize_request, except: [:home, :show ,:destroy, :most_liked]
     #---------- reference for inserting category in article --------- 
      # @articles = Article.all
 
@@ -23,7 +23,7 @@ class ArticleController < ApplicationController
        
         if params[:id]
             article = Article.find_by(id: params[:id])
-            render :json => article, :include => [:user => {:except => :password_digest}, :categories => {:only => :name}]
+            render :json => article, :include => [:likes, :comments, :user => {:except => :password_digest}, :categories => {:only => :name}]
         elsif params[:title]
             articles = Article.where("title LIKE ?", "%" + Article.sanitize_sql_like(params[:title]) + "%")
             render json: articles, :include => [:user => {:except => :password_digest}, :categories => {:only => :name}]
@@ -53,7 +53,7 @@ class ArticleController < ApplicationController
             render json:{ errors: "User not authorized" }, status: :unauthorized
         else
 
-            @article = @current_user.articles.create(title: params[:title], text: params[:text])
+            @article = @current_user.articles.create(title: params[:title], text: params[:text], image_url: params[:image_url])
 
             for category_name in params[:categories]
                 if Category.find_by(name: category_name) == nil
@@ -96,11 +96,13 @@ class ArticleController < ApplicationController
             article.destroy
         end
     end
-    def destroy
-        for article in Article.all
-            article.destroy
-        end
-    end
+
+   
+    # def destroy
+    #     for article in Article.all
+    #         article.destroy
+    #     end
+    # end
 
 
     private

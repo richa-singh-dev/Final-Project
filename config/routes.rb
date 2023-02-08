@@ -15,7 +15,15 @@ Rails.application.routes.draw do
   post "/article/create", to:"article#create"
   put "/article/edit", to:"article#update"
   delete "/article/delete", to: "article#delete"
-  delete "/article/delete/all", to: "article#destroy"
+  # delete "/article/delete/all", to: "article#destroy"
+  get "/article/mostLiked", to: "article#most_liked"
+
+  post "/like", to: "like#home"
+
+  post "/comment", to: "comment#create"
+  delete "/uncomment", to: "comment#delete"
+
+  get "/category", to: "category#show"
 
   post '/auth/login', to: 'authentication#login'
   get '/*a', to: 'application#not_found'

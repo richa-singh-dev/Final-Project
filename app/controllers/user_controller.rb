@@ -8,14 +8,14 @@ class UserController < ApplicationController
     # GET /user
     def index
         @users = User.all
-        render json: @users, status: :ok
+        render json: @users, :except => :password_digest
     end
     
     # GET /users/{username}
     def show
         if params[:id]
             user = User.find_by(id: params[:id])
-            render json: { user: user.as_json( except: [:password_digest, :created_at, :updated_at, :id])}, status: :ok
+            render json: { user: user.as_json( except: [:password_digest])}, status: :ok
         end
     end
     
@@ -23,7 +23,7 @@ class UserController < ApplicationController
     def create
         @user = User.new(user_params)
         if @user.save
-        render json: @user, status: :created
+        render json: @users, :except => :password_digest, status: :created
         else
         render json: { errors: @user.errors.full_messages },
                 status: :unprocessable_entity
@@ -36,6 +36,8 @@ class UserController < ApplicationController
         unless @current_user.update(user_params)
             render json: { errors: @user.errors.full_messages },
                 status: :unprocessable_entity
+        else
+            render json: @current_user, :except => :password_digest, status: :updated
         end
         
     end
